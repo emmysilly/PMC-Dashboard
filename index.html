@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emmy's PMC Dashboard — LA Team</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4f0;
+    --surface: #ffffff;
+    --surface2: #f0ece6;
+    --border: #e2ddd7;
+    --text: #1a1714;
+    --muted: #6b6560;
+    --accent: #7c3aed;
+    --accent-light: #ede9fe;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --teal: #0f766e;
+    --teal-light: #ccfbf1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--text);
+    color: white;
+    padding: 2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .header-left h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .header-left p {
+    font-size: 0.85rem;
+    color: #a09a94;
+    margin-top: 0.4rem;
+    font-weight: 300;
+  }
+
+  .header-right {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #a09a94;
+  }
+
+  .header-right strong {
+    display: block;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 500;
+  }
+
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 2.5rem;
+    overflow-x: auto;
+  }
+
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    background: none;
+    border: none;
+    padding: 1rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+
+  .nav-btn:hover { color: var(--text); }
+
+  .nav-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .content {
+    padding: 2rem 2.5rem;
+    max-width: 1100px;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 1.2rem;
+    color: var(--text);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .task-item:last-child { border-bottom: none; }
+
+  .task-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .task-check.done {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .task-check.done::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .task-text { font-size: 0.9rem; line-height: 1.5; }
+  .task-text.done-text { text-decoration: line-through; color: var(--muted); }
+
+  .task-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+  }
+
+  .badge-urgent { background: var(--red-light); color: var(--red); }
+  .badge-soon { background: var(--amber-light); color: var(--amber); }
+  .badge-done { background: var(--green-light); color: var(--green); }
+  .badge-info { background: var(--blue-light); color: var(--blue); }
+  .badge-purple { background: var(--accent-light); color: var(--accent); }
+
+  .upcoming-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .upcoming-item:last-child { border-bottom: none; }
+
+  .date-pill {
+    background: var(--text);
+    color: white;
+    border-radius: 8px;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 64px;
+    line-height: 1.3;
+  }
+
+  .upcoming-title { font-size: 0.9rem; font-weight: 500; }
+  .upcoming-sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+  .flag-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .flag-watch { background: var(--amber-light); border-left: 3px solid var(--amber); }
+  .flag-ok { background: var(--green-light); border-left: 3px solid var(--green); }
+
+  .flag-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .flag-title { font-size: 0.9rem; font-weight: 500; }
+  .flag-desc { font-size: 0.82rem; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+  .tracker-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .tracker-table th {
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tracker-table td {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .tracker-table tr:last-child td { border-bottom: none; }
+  .tracker-table tr:hover td { background: var(--bg); }
+
+  .status-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .pill-active { background: var(--green-light); color: var(--green); }
+  .pill-watch { background: var(--amber-light); color: var(--amber); }
+  .pill-risk { background: var(--red-light); color: var(--red); }
+
+  .eng-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .eng-high { background: #dbeafe; color: #1d4ed8; }
+  .eng-med { background: var(--amber-light); color: var(--amber); }
+  .eng-low { background: var(--surface2); color: var(--muted); }
+
+  .fellows-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .fellow-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+  }
+
+  .fellow-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+  .fellow-header {
+    padding: 1.1rem 1.25rem 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .fellow-name { font-weight: 500; font-size: 0.95rem; }
+  .fellow-school { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  .fellow-body { padding: 0 1.25rem 1.1rem; }
+
+  .fellow-tag {
+    display: inline-block;
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin: 2px 2px 2px 0;
+  }
+
+  .fellow-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.6rem;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .fellow-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0.75rem 0;
+  }
+
+  .fellow-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+  }
+
+  .fellow-stat-label { color: var(--muted); }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 560px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--muted);
+    line-height: 1;
+    padding: 4px;
+  }
+
+  .modal-body { padding: 1.5rem; }
+
+  .detail-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.88rem;
+  }
+
+  .detail-label { color: var(--muted); width: 110px; flex-shrink: 0; }
+  .detail-val { color: var(--text); font-weight: 500; }
+
+  .week-activity {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  .week-activity p { font-size: 0.85rem; line-height: 1.6; color: var(--muted); }
+  .week-activity strong { color: var(--text); }
+
+  .notes-area {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    resize: vertical;
+    min-height: 80px;
+    color: var(--text);
+    background: var(--surface);
+    margin-top: 0.75rem;
+  }
+
+  .notes-area:focus { outline: none; border-color: var(--accent); }
+
+  .save-btn {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 0.6rem;
+    transition: opacity 0.15s;
+  }
+
+  .save-btn:hover { opacity: 0.88; }
+
+  .progress-bar-wrap {
+    background: var(--surface2);
+    border-radius: 20px;
+    height: 6px;
+    overflow: hidden;
+    margin-top: 0.4rem;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 20px;
+    background: var(--green);
+    transition: width 0.3s;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .summary-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .summary-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .content { padding: 1.25rem; }
+    .header { padding: 1.5rem; }
+    .nav { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>PMC Dashboard</h1>
+    <p>Emmy Chavez · Los Angeles, CA Team · Summer 2026</p>
+  </div>
+  <div class="header-right">
+    <strong>Week 1</strong>
+    June 5, 2026
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchTab('overview')">Overview</button>
+  <button class="nav-btn" onclick="switchTab('tracker')">Tracker</button>
+  <button class="nav-btn" onclick="switchTab('fellows')">Fellows</button>
+  <button class="nav-btn" onclick="switchTab('flags')">Flags & Notes</button>
+</nav>
+
+<div class="content">
+
+  <!-- OVERVIEW TAB -->
+  <div id="tab-overview" class="tab-panel active">
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num" style="color: var(--green);">7</div>
+        <div class="summary-label">Active Fellows</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num" style="color: var(--amber);">1</div>
+        <div class="summary-label">To Watch</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num" style="color: var(--accent);">8</div>
+        <div class="summary-label">Total Fellows</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num" style="color: var(--blue);">1</div>
+        <div class="summary-label">Week</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-title">Still to do</div>
+        <div class="card">
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Start personal notes doc for LA team <span class="task-badge badge-urgent">today</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Confirm you're in all LA sub-channels <span class="task-badge badge-urgent">today</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Read over onboarding materials sent in Slack <span class="task-badge badge-soon">this week</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Log into Paragon email + confirm Google Calendar access <span class="task-badge badge-soon">this week</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Reach out to Project Lead (PL) — introduce yourself <span class="task-badge badge-soon">this week</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Update Slack title to "Project Management Coordinator" <span class="task-badge badge-info">quick</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check done" onclick="toggleTask(this)"></div>
+            <div class="task-text done-text">Send intro message to LA team Slack channel <span class="task-badge badge-done">done</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check done" onclick="toggleTask(this)"></div>
+            <div class="task-text done-text">Share all resource links + Anonymous Reporting Form <span class="task-badge badge-done">done</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check done" onclick="toggleTask(this)"></div>
+            <div class="task-text done-text">Fill out Week 1 Airtable engagement tracker <span class="task-badge badge-done">done</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Coming up soon</div>
+        <div class="card">
+          <div class="upcoming-item">
+            <div class="date-pill">SAT<br>Jun 6</div>
+            <div>
+              <div class="upcoming-title">LA Team Initial Meeting</div>
+              <div class="upcoming-sub">10:00–11:30 AM PST · Zoom · Observe who attends, update tracker after</div>
+            </div>
+          </div>
+          <div class="upcoming-item">
+            <div class="date-pill">SUN<br>Jun 7</div>
+            <div>
+              <div class="upcoming-title">Week 1 Airtable Due</div>
+              <div class="upcoming-sub">By midnight · Update engagement status after Saturday's meeting</div>
+            </div>
+          </div>
+          <div class="upcoming-item">
+            <div class="date-pill">MON<br>Jun 8</div>
+            <div>
+              <div class="upcoming-title">Team: Government Contact Email Due</div>
+              <div class="upcoming-sub">Fellows' internal deadline — monitor if they submit</div>
+            </div>
+          </div>
+          <div class="upcoming-item">
+            <div class="date-pill">TUE<br>Jun 9</div>
+            <div>
+              <div class="upcoming-title">Team: Project Statement Due</div>
+              <div class="upcoming-sub">Fellows' internal deadline — track completion</div>
+            </div>
+          </div>
+          <div class="upcoming-item">
+            <div class="date-pill">SUN<br>Jun 29</div>
+            <div>
+              <div class="upcoming-title">Midpoint Form Sent Out</div>
+              <div class="upcoming-sub">Sharanya sending · Begin scheduling midpoint check-ins</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Current flags to keep in mind</div>
+    <div class="card">
+      <div class="flag-item flag-watch">
+        <div class="flag-icon">⚠️</div>
+        <div>
+          <div class="flag-title">Lincoln Reyes — quiet after intro</div>
+          <div class="flag-desc">Introduced himself on Day 1 but has been noticeably quieter since. Has not been seen contributing to docs, meeting planning, or discussions. Mark as Partial for Week 1 and watch closely going into the Saturday meeting.</div>
+        </div>
+      </div>
+      <div class="flag-item flag-watch">
+        <div class="flag-icon">⚠️</div>
+        <div>
+          <div class="flag-title">Terry Wu — contributing but low voice</div>
+          <div class="flag-desc">Set up the Zoom invite which is a practical contribution, but hasn't spoken up much in channel discussions. Not a flag yet, but worth keeping an eye on participation in Saturday's meeting.</div>
+        </div>
+      </div>
+      <div class="flag-item flag-ok">
+        <div class="flag-icon">✅</div>
+        <div>
+          <div class="flag-title">Team is self-organizing well</div>
+          <div class="flag-desc">Jessica Zhang is leading coordination, Katelyn set up Zotero, Juana is sharing resources, and fellows are volunteering for project statement sections. Strong start — no operational issues to escalate yet.</div>
+        </div>
+      </div>
+      <div class="flag-item flag-ok">
+        <div class="flag-icon">✅</div>
+        <div>
+          <div class="flag-title">Ashlyn Roice — proactively communicated delay</div>
+          <div class="flag-desc">Mentioned finals as a reason for late response — this is good behavior. She came back in immediately after. No concern here, just good to note she was transparent.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKER TAB -->
+  <div id="tab-tracker" class="tab-panel">
+    <div class="section-title">Week 1 Engagement Tracker</div>
+    <div class="card" style="padding: 0; overflow: hidden;">
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th>Fellow</th>
+            <th>Status</th>
+            <th>Engagement</th>
+            <th>Week 1</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Ashlyn Roice</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-high">High</span></td>
+            <td><span class="status-pill pill-active">Active!</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Communicated finals delay proactively; attended workshop and jumped in on deliverables immediately.</td>
+          </tr>
+          <tr>
+            <td><strong>Jessica Zhang</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-high">High</span></td>
+            <td><span class="status-pill pill-active">Active!</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Leading team coordination from Day 1; created shared docs, organized When2Meet, sending reminders.</td>
+          </tr>
+          <tr>
+            <td><strong>Juana Wong</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-high">High</span></td>
+            <td><span class="status-pill pill-active">Active!</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Sharing resources, volunteering for project statement sections, actively engaged in discussions.</td>
+          </tr>
+          <tr>
+            <td><strong>Katelyn Miyasaki</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-high">High</span></td>
+            <td><span class="status-pill pill-active">Active!</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Set up team Zotero, contributing ideas consistently, asking thoughtful questions in channel.</td>
+          </tr>
+          <tr>
+            <td><strong>Lily (Yuxuan) Hu</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-high">High</span></td>
+            <td><span class="status-pill pill-active">Active!</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Responsive and contributing; volunteered to draft project statement and confirmed meeting attendance.</td>
+          </tr>
+          <tr>
+            <td><strong>Lincoln Reyes</strong></td>
+            <td><span class="status-pill pill-watch">Active</span></td>
+            <td><span class="eng-pill eng-low">Low</span></td>
+            <td><span class="status-pill pill-watch">Partial</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Introduced himself during onboarding but quieter since. Worth monitoring as cohort progresses.</td>
+          </tr>
+          <tr>
+            <td><strong>Sophia Kim</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-high">High</span></td>
+            <td><span class="status-pill pill-active">Active!</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Present and willing to contribute; confirmed attendance and offered to help with all project statement sections.</td>
+          </tr>
+          <tr>
+            <td><strong>Terry (Shan Kai) Wu</strong></td>
+            <td><span class="status-pill pill-active">Active</span></td>
+            <td><span class="eng-pill eng-med">Medium</span></td>
+            <td><span class="status-pill" style="background:#e0f2fe;color:#0369a1;">Meeting Active</span></td>
+            <td style="font-size:0.78rem; color: var(--muted); max-width:200px;">Organized the Zoom invite; less vocal in channel discussions so far.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <div class="section-title">Team engagement summary</div>
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+          <span style="font-size:0.85rem;">Active! (7 of 8 fellows)</span>
+          <span style="font-size:0.85rem; font-weight:500; color:var(--green);">87.5%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" style="width:87.5%"></div>
+        </div>
+        <p style="font-size:0.78rem; color:var(--muted); margin-top:0.75rem;">Strong Week 1 engagement. Lincoln Reyes is the only fellow marked below Active — monitor at Saturday's meeting before escalating.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FELLOWS TAB -->
+  <div id="tab-fellows" class="tab-panel">
+    <div class="section-title">Fellow profiles</div>
+    <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1.25rem;">Click any card to view full profile and add personal notes.</p>
+    <div class="fellows-grid" id="fellows-grid"></div>
+  </div>
+
+  <!-- FLAGS TAB -->
+  <div id="tab-flags" class="tab-panel">
+    <div class="section-title">Running notes & flags</div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div style="font-weight:500; margin-bottom:0.75rem; font-size:0.9rem;">Active flags</div>
+          <div class="flag-item flag-watch" style="margin-bottom:0.75rem;">
+            <div>
+              <div class="flag-title">Lincoln Reyes</div>
+              <div class="flag-desc">Quiet after intro. Watch Saturday meeting attendance. If absent or still minimal — send a friendly DM next week.</div>
+            </div>
+          </div>
+          <div class="flag-item flag-watch">
+            <div>
+              <div class="flag-title">Terry Wu</div>
+              <div class="flag-desc">Low vocal presence so far. Monitor Saturday — if passive in discussion, consider a light check-in DM.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <div style="font-weight:500; margin-bottom:0.75rem; font-size:0.9rem;">Things to remember</div>
+          <div style="font-size:0.85rem; color:var(--muted); line-height:1.8;">
+            <div>· Same-day responses are the norm on Slack</div>
+            <div>· Be in ALL sub-channels of your team</div>
+            <div>· Post weekly updates in <code style="font-size:0.8rem; background:var(--surface2); padding:1px 5px; border-radius:4px;">#team-policy</code></div>
+            <div>· DMs are where relationships are built — don't be purely transactional</div>
+            <div>· Check in with PL too, not just Fellows</div>
+            <div>· If overwhelmed, say so early in Slack to Ops</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div style="font-weight:500; margin-bottom:0.75rem; font-size:0.9rem;">Weekly log — Week 1</div>
+          <div style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.75rem;">Use this space to draft your #team-policy weekly update.</div>
+          <textarea class="notes-area" id="weekly-log" placeholder="Team overview:&#10;&#10;Fellows flagged for follow-up:&#10;&#10;Anything needing Ops/Policy attention:"></textarea>
+          <button class="save-btn" onclick="saveLog()">Save note</button>
+          <div id="save-confirm" style="font-size:0.78rem; color:var(--green); margin-top:0.4rem; display:none;">Saved!</div>
+        </div>
+
+        <div class="card" style="margin-top:1rem;">
+          <div style="font-weight:500; margin-bottom:0.75rem; font-size:0.9rem;">Inactivity protocol reminder</div>
+          <div style="font-size:0.82rem; color:var(--muted); line-height:1.8;">
+            <div style="margin-bottom:0.4rem;"><span style="font-weight:500; color:var(--text);">Step 1</span> — PL notifies PMC of inactive fellow</div>
+            <div style="margin-bottom:0.4rem;"><span style="font-weight:500; color:var(--text);">Step 2</span> — PMC DMs fellow on Slack (48hr response window)</div>
+            <div style="margin-bottom:0.4rem;"><span style="font-weight:500; color:var(--text);">Step 3</span> — No response → follow-up via Slack + email with deadline</div>
+            <div><span style="font-weight:500; color:var(--text);">Step 4</span> — No response → final offboarding email</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FELLOW MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div style="display:flex; align-items:center; gap:0.9rem;">
+        <div class="avatar" id="modal-avatar"></div>
+        <div>
+          <div style="font-weight:500; font-size:1rem;" id="modal-name"></div>
+          <div style="font-size:0.8rem; color:var(--muted);" id="modal-school"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+const fellows = [
+  {
+    name: "Ashlyn Roice",
+    initials: "AR",
+    color: "#dbeafe",
+    textColor: "#1d4ed8",
+    school: "Caltech — CS & Data Science (graduating senior)",
+    location: "Mountain House, CA (Bay Area)",
+    interests: ["Public health", "Data science", "Health policy"],
+    role: "Active contributor",
+    status: "Active",
+    engagement: "High",
+    week1: "Active!",
+    vibe: "Organized, responsible. Communicated proactively about finals delay — shows maturity. Jumping into deliverables without needing prompting.",
+    pmc_note: "Good communicator. Will likely be reliable throughout cohort. Keep rapport warm."
+  },
+  {
+    name: "Jessica Zhang",
+    initials: "JZ",
+    color: "#dcfce7",
+    textColor: "#15803d",
+    school: "UC Irvine — Final weeks (heading to DC internship)",
+    location: "Washington, DC (summer)",
+    interests: ["Policy coordination", "Team organization", "Language access"],
+    role: "Team leader (self-organized)",
+    status: "Active",
+    engagement: "High",
+    week1: "Active!",
+    vibe: "Natural leader. Took charge of scheduling, doc creation, and team communication without being asked. Very high initiative.",
+    pmc_note: "She'll likely be your main point of contact within the team. Build a solid relationship early — she'll be a reliable indicator of team health."
+  },
+  {
+    name: "Juana Wong",
+    initials: "JW",
+    color: "#fef3c7",
+    textColor: "#b45309",
+    school: "City College of New York — CS (recent grad)",
+    location: "New York City",
+    interests: ["Healthtech", "Civictech", "Law", "Public good"],
+    role: "Research + project statement contributor",
+    status: "Active",
+    engagement: "High",
+    week1: "Active!",
+    vibe: "Collaborative and resourceful. Quick to share relevant links and volunteer for tasks. Seems genuinely curious about the project.",
+    pmc_note: "Exploring career trajectory — may appreciate guidance. Good energy for team dynamics."
+  },
+  {
+    name: "Katelyn Miyasaki",
+    initials: "KM",
+    color: "#f3e8ff",
+    textColor: "#7c3aed",
+    school: "UC Los Angeles — Postdoc (nanoparticle drug delivery)",
+    location: "Los Angeles, CA",
+    interests: ["Environmental policy", "Health policy", "Breathing training research", "Tech regulation"],
+    role: "Research infrastructure lead (Zotero)",
+    status: "Active",
+    engagement: "High",
+    week1: "Active!",
+    vibe: "Academic and methodical. Set up Zotero for the whole team, asking smart structural questions. More research-oriented than policy.",
+    pmc_note: "Most experienced academically on the team. May bring rigor but might need nudging on policy translation. Great resource for the team."
+  },
+  {
+    name: "Lily (Yuxuan) Hu",
+    initials: "LH",
+    color: "#fce7f3",
+    textColor: "#be185d",
+    school: "UCLA — Public Affairs & Education (rising junior)",
+    location: "LA → New York (mid-June)",
+    interests: ["Law", "Public policy", "Education"],
+    role: "Project statement contributor",
+    status: "Active",
+    engagement: "High",
+    week1: "Active!",
+    vibe: "Responsive and collaborative. Created a shared working Google Doc early. Eager to connect in person with teammates.",
+    pmc_note: "Moving to NY mid-June — check if timezone or travel affects participation. Otherwise very engaged."
+  },
+  {
+    name: "Lincoln Reyes",
+    initials: "LR",
+    color: "#f0fdf4",
+    textColor: "#166534",
+    school: "UC Irvine — Social Policy & Public Service (freshman)",
+    location: "Westlake / Inglewood / Irvine",
+    interests: ["Housing policy", "Affordable housing", "Education access", "Real estate"],
+    role: "Fellow (low activity so far)",
+    status: "Active",
+    engagement: "Low",
+    week1: "Partial",
+    vibe: "Shared a thoughtful intro — interested in housing + development. But has gone quiet since. May be adjusting or overwhelmed as a freshman.",
+    pmc_note: "⚠️ Watch closely. If he misses Saturday's meeting or doesn't engage this week, send a warm DM early next week. Don't wait for PL to flag it."
+  },
+  {
+    name: "Sophia Kim",
+    initials: "SK",
+    color: "#e0f2fe",
+    textColor: "#0369a1",
+    school: "Cornell — Info Sci & Public Policy (rising sophomore)",
+    location: "Ithaca, NY / New Jersey",
+    interests: ["Healthcare policy", "Tech for public good", "Research"],
+    role: "Project statement contributor",
+    status: "Active",
+    engagement: "High",
+    week1: "Active!",
+    vibe: "Engaged and willing. Confirmed attendance, offered to help with all sections. Seems enthusiastic about health + tech intersections.",
+    pmc_note: "Dual location (Ithaca / NJ) — could affect availability. Otherwise solid. Note she's a rising sophomore — may need more support than older fellows."
+  },
+  {
+    name: "Terry (Shan Kai) Wu",
+    initials: "TW",
+    color: "#fff7ed",
+    textColor: "#c2410c",
+    school: "Claremont McKenna — Economics & International Relations (rising junior)",
+    location: "Claremont, CA",
+    interests: ["Financial crises", "Banking stability", "Data science", "International policy"],
+    role: "Logistics (Zoom setup)",
+    status: "Active",
+    engagement: "Medium",
+    week1: "Meeting Active",
+    vibe: "Stepped up practically by organizing the Zoom invite. Less talkative in open Slack discussion — might be more of a quiet contributor.",
+    pmc_note: "Not a flag yet, but observe Saturday. If he's engaged in the meeting but just not chatty on Slack, that's fine. If he's passive in both — gentle DM."
+  }
+];
+
+function renderFellows() {
+  const grid = document.getElementById('fellows-grid');
+  grid.innerHTML = fellows.map((f, i) => `
+    <div class="fellow-card" onclick="openModal(${i})">
+      <div class="fellow-header">
+        <div class="avatar" style="background:${f.color}; color:${f.textColor};">${f.initials}</div>
+        <div>
+          <div class="fellow-name">${f.name}</div>
+          <div class="fellow-school">${f.school.split('—')[0].trim()}</div>
+        </div>
+      </div>
+      <div class="fellow-body">
+        ${f.interests.map(t => `<span class="fellow-tag">${t}</span>`).join('')}
+        <hr class="fellow-divider">
+        <div class="fellow-stat">
+          <span class="fellow-stat-label">Status</span>
+          <span class="status-pill ${f.engagement === 'Low' ? 'pill-watch' : 'pill-active'}" style="font-size:0.72rem;">${f.week1}</span>
+        </div>
+        <p class="fellow-note">"${f.vibe.substring(0, 80)}..."</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openModal(i) {
+  const f = fellows[i];
+  document.getElementById('modal-avatar').style.background = f.color;
+  document.getElementById('modal-avatar').style.color = f.textColor;
+  document.getElementById('modal-avatar').textContent = f.initials;
+  document.getElementById('modal-name').textContent = f.name;
+  document.getElementById('modal-school').textContent = f.school;
+
+  const saved = localStorage.getItem('note_' + f.initials) || '';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="detail-row"><span class="detail-label">Location</span><span class="detail-val">${f.location}</span></div>
+    <div class="detail-row"><span class="detail-label">Role on team</span><span class="detail-val">${f.role}</span></div>
+    <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val"><span class="status-pill ${f.engagement === 'Low' ? 'pill-watch' : 'pill-active'}">${f.status}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Engagement</span><span class="detail-val"><span class="eng-pill ${f.engagement === 'High' ? 'eng-high' : f.engagement === 'Medium' ? 'eng-med' : 'eng-low'}">${f.engagement}</span></span></div>
+    <div class="detail-row"><span class="detail-label">Week 1</span><span class="detail-val">${f.week1}</span></div>
+    <div class="week-activity">
+      <p><strong>Personality / vibe:</strong> ${f.vibe}</p>
+      <p style="margin-top:0.6rem;"><strong>PMC note:</strong> ${f.pmc_note}</p>
+    </div>
+    <div style="margin-top:1rem;">
+      <div style="font-size:0.85rem; font-weight:500; margin-bottom:0.4rem;">Your personal notes</div>
+      <textarea class="notes-area" id="note-${f.initials}" placeholder="Add your own observations here...">${saved}</textarea>
+      <button class="save-btn" onclick="saveNote('${f.initials}')">Save note</button>
+      <div id="saved-${f.initials}" style="font-size:0.78rem; color:var(--green); margin-top:0.4rem; display:none;">Saved!</div>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function saveNote(initials) {
+  const val = document.getElementById('note-' + initials).value;
+  localStorage.setItem('note_' + initials, val);
+  const el = document.getElementById('saved-' + initials);
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 2000);
+}
+
+function saveLog() {
+  const val = document.getElementById('weekly-log').value;
+  localStorage.setItem('weekly_log', val);
+  const el = document.getElementById('save-confirm');
+  el.style.display = 'block';
+  setTimeout(() => el.style.display = 'none', 2000);
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+function toggleTask(el) {
+  el.classList.toggle('done');
+  const textEl = el.nextElementSibling;
+  textEl.classList.toggle('done-text');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+window.onload = () => {
+  renderFellows();
+  const savedLog = localStorage.getItem('weekly_log');
+  if (savedLog) document.getElementById('weekly-log').value = savedLog;
+};
+</script>
+</body>
+</html>

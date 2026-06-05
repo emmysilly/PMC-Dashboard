@@ -512,6 +512,7 @@
   <button class="nav-btn" onclick="switchTab('tracker')">Tracker</button>
   <button class="nav-btn" onclick="switchTab('fellows')">Fellows</button>
   <button class="nav-btn" onclick="switchTab('flags')">Flags & Notes</button>
+  <button class="nav-btn" onclick="switchTab('notes')">My Notes Doc</button>
 </nav>
 
 <div class="content">
@@ -811,6 +812,124 @@
       </div>
     </div>
   </div>
+
+  <!-- NOTES TAB -->
+  <div id="tab-notes" class="tab-panel">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div class="section-title" style="margin-bottom:0.25rem;">Personal Notes Doc</div>
+        <p style="font-size:0.85rem; color:var(--muted);">Your running log for the LA team — Week by week. Everything here saves automatically.</p>
+      </div>
+      <button class="save-btn" onclick="saveAllNotes()" style="margin-top:0;">Save all</button>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <div style="font-weight:500; font-size:0.95rem;">Week 1 — June 5–7, 2026</div>
+        <span class="task-badge badge-urgent">current week</span>
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Team overview:</strong> LA cohort officially started June 5. 8 fellows total. Team is self-organizing well — Jessica Zhang stepped up immediately as de facto coordinator, creating shared docs and scheduling the first meeting for Saturday June 6 at 10AM PST. Katelyn Miyasaki set up a shared Zotero for the team. Team is working on the LA Language Access project.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Intro sent:</strong> Emmy sent intro message to #su26-los-angeles on June 5 at 2:51 PM including all 4 resource links (Shared Drive, Fellowship Portal, Deliverable Template Folder, Anonymous Reporting Form).
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Fellows flagged:</strong> Lincoln Reyes — quiet after Day 1 intro, not engaging in docs or planning. Terry Wu — organized Zoom invite but minimal vocal presence. Both marked to watch at Saturday meeting.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">PC contact:</strong> Wajiha Mekki (PC) messaged Emmy on June 5 — invited her to join the Saturday 12:30 PM EST meeting with Jessica Zhang and requested an intro call. Emmy needs to respond ASAP.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Airtable status logged:</strong> All 8 fellows logged for Week 1. 7 marked Active, 1 (Lincoln) marked Partial with Low engagement.
+      </div>
+      <textarea class="notes-area" id="note-week1" placeholder="Add anything else from this week..."></textarea>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <div style="font-weight:500; font-size:0.95rem;">Week 2 — June 8–14, 2026</div>
+        <span class="task-badge badge-info">upcoming</span>
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Deadlines to monitor:</strong> Government Contact Email (Mon Jun 8) and Project Statement (Tue Jun 9). Track which fellows submit on time.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Your meetings:</strong> Ops Team Weekly Meeting — Thursday June 12 at 8:30 PM EDT. Confirm intro call with Wajiha Mekki this week.
+      </div>
+      <textarea class="notes-area" id="note-week2" placeholder="Add team overview, flags, updates after Saturday's meeting..."></textarea>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <div style="font-weight:500; font-size:0.95rem;">Individual fellow notes</div>
+        <span class="task-badge badge-purple">quick ref</span>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Ashlyn Roice</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">Caltech CS · Mountain House CA · Public health focus</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Proactively flagged finals delay. Reliable communicator. Jumped into deliverables immediately.</div>
+          <textarea class="notes-area" id="fn-AR" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Jessica Zhang</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">UC Irvine · DC summer · Team coordinator</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Self-organized the whole team from Day 1. Build strong relationship — she's your inside read on team health.</div>
+          <textarea class="notes-area" id="fn-JZ" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Juana Wong</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">CCNY CS grad · NYC · Healthtech + civictech</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Active and collaborative. Sharing resources and volunteering for tasks without prompting.</div>
+          <textarea class="notes-area" id="fn-JW" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Katelyn Miyasaki</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">UCLA Postdoc · LA · Health + env policy</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Most academically experienced. Set up Zotero. Ask thoughtful questions — great research anchor for the team.</div>
+          <textarea class="notes-area" id="fn-KM" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Lily (Yuxuan) Hu</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">UCLA → NYC mid-June · Public Affairs</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Engaged and contributing. Moving to NYC mid-June — check if travel affects availability around then.</div>
+          <textarea class="notes-area" id="fn-LH" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Lincoln Reyes ⚠️</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">UC Irvine Freshman · SoCal · Housing policy</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic; color:#d97706;">Quiet after intro. Watch Saturday closely. If still minimal next week — send a warm DM. May be overwhelmed as a freshman.</div>
+          <textarea class="notes-area" id="fn-LR" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Sophia Kim</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">Cornell · Ithaca/NJ · Healthcare + tech policy</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Enthusiastic and willing. Rising sophomore — may need more support than older fellows. Dual location worth watching.</div>
+          <textarea class="notes-area" id="fn-SK" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:500; margin-bottom:0.3rem; color:var(--text);">Terry (Shan Kai) Wu</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.3rem;">Claremont McKenna · Econ + IR · Claremont CA</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.4rem; font-style:italic;">Organized Zoom invite — practical contributor. Quiet in open discussion. Watch Saturday before flagging.</div>
+          <textarea class="notes-area" id="fn-TW" style="min-height:55px;" placeholder="Your notes..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div style="font-weight:500; font-size:0.95rem; margin-bottom:0.5rem;">Key contacts</div>
+      <div style="font-size:0.82rem; line-height:2; color:var(--muted);">
+        <div><strong style="color:var(--text); width:160px; display:inline-block;">Wajiha Mekki</strong> Policy Coordinator (PC) — your main policy-side contact. Schedule intro call ASAP.</div>
+        <div><strong style="color:var(--text); width:160px; display:inline-block;">Sharanya Maddukuri</strong> Ops lead — escalate issues here. Reports to Annie/Sofia/Ruth.</div>
+        <div><strong style="color:var(--text); width:160px; display:inline-block;">Toki Zhumadil</strong> Ops teammate — familiar face, you've worked with her on the dashboard.</div>
+        <div><strong style="color:var(--text); width:160px; display:inline-block;">Jessica Zhang</strong> De facto team lead — your best inside read on how the team is doing.</div>
+        <div><strong style="color:var(--text); width:160px; display:inline-block;">Jared Salcedo</strong> Project Lead (PL) — introduce yourself to him this week.</div>
+      </div>
+    </div>
+
+  </div>
+
 
 </div>
 
@@ -1145,10 +1264,29 @@ function renderCalendars() {
   ).join('');
 }
 
+function saveAllNotes() {
+  const noteIds = ['note-week1','note-week2','fn-AR','fn-JZ','fn-JW','fn-KM','fn-LH','fn-LR','fn-SK','fn-TW'];
+  noteIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) localStorage.setItem('notes_' + id, el.value);
+  });
+  alert('All notes saved!');
+}
+
+function loadAllNotes() {
+  const noteIds = ['note-week1','note-week2','fn-AR','fn-JZ','fn-JW','fn-KM','fn-LH','fn-LR','fn-SK','fn-TW'];
+  noteIds.forEach(id => {
+    const el = document.getElementById(id);
+    const saved = localStorage.getItem('notes_' + id);
+    if (el && saved) el.value = saved;
+  });
+}
+
 window.onload = () => {
   renderFellows();
   loadTasks();
   renderCalendars();
+  loadAllNotes();
   const savedLog = localStorage.getItem('weekly_log');
   if (savedLog) document.getElementById('weekly-log').value = savedLog;
 };

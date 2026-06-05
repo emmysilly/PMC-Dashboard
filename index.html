@@ -540,8 +540,16 @@
 
     <div class="two-col">
       <div>
-        <div class="section-title">Still to do</div>
+        <div class="section-title">Your to-dos <span style="font-size:0.75rem; font-weight:400; color:var(--accent); font-family:'DM Sans',sans-serif; background:var(--accent-light); padding:2px 8px; border-radius:20px; margin-left:6px;">Emmy</span></div>
         <div class="card">
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Reply to Wajiha Mekki (PC) — confirm Saturday 12:30 PM EST meeting <span class="task-badge badge-urgent">today</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Schedule intro call with Wajiha Mekki (PC) <span class="task-badge badge-urgent">this week</span></div>
+          </div>
           <div class="task-item">
             <div class="task-check" onclick="toggleTask(this)"></div>
             <div class="task-text">Start personal notes doc for LA team <span class="task-badge badge-urgent">today</span></div>
@@ -579,47 +587,42 @@
             <div class="task-text done-text">Fill out Week 1 Airtable engagement tracker <span class="task-badge badge-done">done</span></div>
           </div>
         </div>
+
+        <div class="section-title" style="margin-top:1.5rem;">Team to-dos <span style="font-size:0.75rem; font-weight:400; color:var(--teal); font-family:'DM Sans',sans-serif; background:var(--teal-light); padding:2px 8px; border-radius:20px; margin-left:6px;">LA Fellows</span></div>
+        <div class="card">
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Sources added to Synthesis Grid <span class="task-badge badge-soon">before Sat</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Government Contact Email sent <span class="task-badge badge-soon">Mon Jun 8</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Project Statement submitted <span class="task-badge badge-soon">Tue Jun 9</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check" onclick="toggleTask(this)"></div>
+            <div class="task-text">Opening Survey form completed (all fellows) <span class="task-badge badge-info">monitor</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check done" onclick="toggleTask(this)"></div>
+            <div class="task-text done-text">Team introductions in Slack channel <span class="task-badge badge-done">done</span></div>
+          </div>
+          <div class="task-item">
+            <div class="task-check done" onclick="toggleTask(this)"></div>
+            <div class="task-text done-text">When2Meet filled out for initial meeting <span class="task-badge badge-done">done</span></div>
+          </div>
+        </div>
       </div>
 
       <div>
-        <div class="section-title">Coming up soon</div>
-        <div class="card">
-          <div class="upcoming-item">
-            <div class="date-pill">SAT<br>Jun 6</div>
-            <div>
-              <div class="upcoming-title">LA Team Initial Meeting</div>
-              <div class="upcoming-sub">10:00–11:30 AM PST · Zoom · Observe who attends, update tracker after</div>
-            </div>
-          </div>
-          <div class="upcoming-item">
-            <div class="date-pill">SUN<br>Jun 7</div>
-            <div>
-              <div class="upcoming-title">Week 1 Airtable Due</div>
-              <div class="upcoming-sub">By midnight · Update engagement status after Saturday's meeting</div>
-            </div>
-          </div>
-          <div class="upcoming-item">
-            <div class="date-pill">MON<br>Jun 8</div>
-            <div>
-              <div class="upcoming-title">Team: Government Contact Email Due</div>
-              <div class="upcoming-sub">Fellows' internal deadline — monitor if they submit</div>
-            </div>
-          </div>
-          <div class="upcoming-item">
-            <div class="date-pill">TUE<br>Jun 9</div>
-            <div>
-              <div class="upcoming-title">Team: Project Statement Due</div>
-              <div class="upcoming-sub">Fellows' internal deadline — track completion</div>
-            </div>
-          </div>
-          <div class="upcoming-item">
-            <div class="date-pill">SUN<br>Jun 29</div>
-            <div>
-              <div class="upcoming-title">Midpoint Form Sent Out</div>
-              <div class="upcoming-sub">Sharanya sending · Begin scheduling midpoint check-ins</div>
-            </div>
-          </div>
-        </div>
+        <div class="section-title">Your calendar <span style="font-size:0.75rem; font-weight:400; color:var(--accent); font-family:'DM Sans',sans-serif; background:var(--accent-light); padding:2px 8px; border-radius:20px; margin-left:6px;">Emmy</span></div>
+        <div class="card" id="emmy-cal"></div>
+
+        <div class="section-title" style="margin-top:1.5rem;">Team calendar <span style="font-size:0.75rem; font-weight:400; color:var(--teal); font-family:'DM Sans',sans-serif; background:var(--teal-light); padding:2px 8px; border-radius:20px; margin-left:6px;">LA Fellows</span></div>
+        <div class="card" id="team-cal"></div>
       </div>
     </div>
 
@@ -1032,6 +1035,26 @@ function toggleTask(el) {
   el.classList.toggle('done');
   const textEl = el.nextElementSibling;
   textEl.classList.toggle('done-text');
+  saveTasks();
+}
+
+function saveTasks() {
+  const checks = document.querySelectorAll('.task-check');
+  const states = Array.from(checks).map(c => c.classList.contains('done'));
+  localStorage.setItem('task_states', JSON.stringify(states));
+}
+
+function loadTasks() {
+  const saved = localStorage.getItem('task_states');
+  if (!saved) return;
+  const states = JSON.parse(saved);
+  const checks = document.querySelectorAll('.task-check');
+  checks.forEach((el, i) => {
+    if (states[i]) {
+      el.classList.add('done');
+      el.nextElementSibling.classList.add('done-text');
+    }
+  });
 }
 
 function switchTab(name) {
@@ -1041,8 +1064,91 @@ function switchTab(name) {
   event.target.classList.add('active');
 }
 
+function getNextThursday() {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = (4 - day + 7) % 7 || 7;
+  const next = new Date(now);
+  next.setDate(now.getDate() + diff);
+  return next;
+}
+
+function formatDatePill(date) {
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[date.getDay()] + '<br>' + months[date.getMonth()] + ' ' + date.getDate();
+}
+
+function getDayLabel(date) {
+  if (!date) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const diff = Math.round((target - today) / (1000 * 60 * 60 * 24));
+  if (diff < 0) return 'past';
+  if (diff === 0) return 'today';
+  if (diff === 1) return 'tomorrow';
+  if (diff <= 6) return 'in ' + diff + ' days';
+  return null;
+}
+
+function calItem(dateObj, title, sub, color, isPast) {
+  const label = getDayLabel(dateObj);
+  const pillHtml = dateObj ? formatDatePill(dateObj) : 'TBD';
+  let labelHtml = '';
+  if (label && label !== 'past') {
+    const cls = label === 'today' ? 'badge-urgent' : label === 'tomorrow' ? 'badge-soon' : 'badge-info';
+    labelHtml = '<span class="task-badge ' + cls + '">' + label + '</span>';
+  }
+  const opacity = isPast ? 'opacity:0.4;' : '';
+  return '<div class="upcoming-item" style="' + opacity + '">' +
+    '<div class="date-pill" style="background:' + color + ';">' + pillHtml + '</div>' +
+    '<div>' +
+    '<div class="upcoming-title">' + title + ' ' + labelHtml + '</div>' +
+    '<div class="upcoming-sub">' + sub + '</div>' +
+    '</div></div>';
+}
+
+function renderCalendars() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  function d(y,m,day) {
+    const dt = new Date(y,m-1,day);
+    return { date: dt, past: dt < today };
+  }
+
+  const nextThu = getNextThursday();
+  const thuPast = nextThu < today;
+
+  const emmyEvents = [
+    { ...d(2026,6,6), title: 'PC + Jessica Zhang scoping call', sub: '12:30 PM EST · With Wajiha Mekki (PC) · Confirm ASAP', color: '#7c3aed' },
+    { ...d(2026,6,7), title: 'Week 1 Airtable due', sub: 'By midnight · Update after Saturday meeting', color: '#1a1714' },
+    { date: nextThu, past: thuPast, title: 'Ops Team Weekly Meeting', sub: '8:30 PM EDT · Every Thursday · Required for all PMCs', color: '#7c3aed' },
+    { date: null, past: false, title: 'Intro call with Wajiha Mekki (PC)', sub: 'TBD · Schedule this week — build relationship early', color: '#7c3aed' },
+    { ...d(2026,6,29), title: 'Midpoint form sent out', sub: 'Sharanya sending · Start scheduling your midpoint check-ins', color: '#1a1714' },
+  ];
+
+  const teamEvents = [
+    { ...d(2026,6,6), title: 'LA Team Initial Meeting', sub: '10:00–11:30 AM PST / 1:00–2:30 PM EST · Zoom', color: '#0f766e' },
+    { ...d(2026,6,8), title: 'Government Contact Email due', sub: 'Fellows internal deadline — monitor submission', color: '#0f766e' },
+    { ...d(2026,6,9), title: 'Project Statement due', sub: 'Fellows internal deadline — track completion', color: '#0f766e' },
+    { ...d(2026,6,9), title: 'Opening Survey — all fellows should be complete', sub: 'Check Airtable for any missing submissions', color: '#1a1714' },
+  ];
+
+  document.getElementById('emmy-cal').innerHTML = emmyEvents.map(e =>
+    calItem(e.date, e.title, e.sub, e.color, e.past)
+  ).join('');
+
+  document.getElementById('team-cal').innerHTML = teamEvents.map(e =>
+    calItem(e.date, e.title, e.sub, e.color, e.past)
+  ).join('');
+}
+
 window.onload = () => {
   renderFellows();
+  loadTasks();
+  renderCalendars();
   const savedLog = localStorage.getItem('weekly_log');
   if (savedLog) document.getElementById('weekly-log').value = savedLog;
 };

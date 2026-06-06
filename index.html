@@ -27,6 +27,27 @@
     --teal-light: #ccfbf1;
   }
 
+  [data-theme="dark"] {
+    --bg: #0f0e0d;
+    --surface: #1c1a18;
+    --surface2: #252320;
+    --border: #2e2b28;
+    --text: #f0ece6;
+    --muted: #8a8480;
+    --accent: #a78bfa;
+    --accent-light: #2e1f5e;
+    --green: #4ade80;
+    --green-light: #052e16;
+    --amber: #fbbf24;
+    --amber-light: #2d1d00;
+    --red: #f87171;
+    --red-light: #2d0a0a;
+    --blue: #60a5fa;
+    --blue-light: #0d1f3c;
+    --teal: #2dd4bf;
+    --teal-light: #042f2e;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -501,9 +522,14 @@
     <h1>PMC Dashboard</h1>
     <p>Emmy Chavez · Los Angeles, CA Team · Summer 2026</p>
   </div>
-  <div class="header-right">
-    <strong>Week 1</strong>
-    June 5, 2026
+  <div class="header-right" style="display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem;">
+    <button id="theme-btn" onclick="toggleTheme()" style="font-family:'DM Sans',sans-serif; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:0.3rem 0.9rem; font-size:0.8rem; color:white; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.2s;">
+      <span id="theme-icon">🌙</span> <span id="theme-label">Dark mode</span>
+    </button>
+    <div>
+      <strong>Week 1</strong>
+      June 5, 2026
+    </div>
   </div>
 </div>
 
@@ -863,7 +889,7 @@
         <strong style="color:var(--text);">Fellows flagged:</strong> Lincoln Reyes — quiet after Day 1 intro, not engaging in docs or planning. Terry Wu — organized Zoom invite but minimal vocal presence. Both marked to watch at Saturday meeting.
       </div>
       <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
-        <strong style="color:var(--text);">Attendance note (Jun 6 team meeting):</strong> Ashlyn Roice did not attend. Likely had a prior commitment — not flagged yet since she has been communicative. Worth sending a friendly DM to check in and keep the relationship warm. Not her responsibility to inform PMC but good to note.
+        <strong style="color:var(--text);">Attendance note (Jun 6 team meeting):</strong> Ashlyn Roice arrived approximately 20 minutes late — apologized to the group but reason was unclear. She did show up and engage. Not a flag, just worth monitoring if lateness becomes a pattern. No action needed at this time.
       </div>
       <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
         <strong style="color:var(--text);">Fellow background note:</strong> Lily Hu has prior experience working with the LA City Council — strong asset for the LA Language Access project. Worth noting for project context.
@@ -1020,7 +1046,7 @@ const fellows = [
     engagement: "High",
     week1: "Active!",
     vibe: "Organized, responsible. Communicated proactively about finals delay — shows maturity. Jumping into deliverables without needing prompting.",
-    pmc_note: "Good communicator. Will likely be reliable throughout cohort. Keep rapport warm. NOTE: Did not attend June 6 team meeting — likely busy with finals/other commitment. Not flagged yet but worth a friendly check-in DM."
+    pmc_note: "Good communicator. Will likely be reliable throughout cohort. Keep rapport warm. NOTE: Arrived ~20 min late to June 6 team meeting — apologized but reason unclear. Not a flag, just worth noting. No action needed unless it becomes a pattern."
   },
   {
     name: "Jessica Zhang",
@@ -1319,6 +1345,46 @@ function renderCalendars() {
   ).join('');
 }
 
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('theme-btn');
+  const icon = document.getElementById('theme-icon');
+  const label = document.getElementById('theme-label');
+  const isDark = html.getAttribute('data-theme') === 'dark';
+
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    icon.textContent = '🌙';
+    label.textContent = 'Dark mode';
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    icon.textContent = '☀️';
+    label.textContent = 'Light mode';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('theme-btn');
+  const icon = document.getElementById('theme-icon');
+  const label = document.getElementById('theme-label');
+  const isDark = html.dataset.theme === 'dark';
+
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    icon.textContent = '🌙';
+    label.textContent = 'Dark mode';
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.dataset.theme = 'dark';
+    icon.textContent = '☀️';
+    label.textContent = 'Light mode';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
 function toggleFocusMode() {
   const btn = document.getElementById('focus-btn');
   const icon = document.getElementById('focus-icon');
@@ -1389,6 +1455,12 @@ function loadAllNotes() {
 }
 
 window.onload = () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-icon').textContent = '☀️';
+    document.getElementById('theme-label').textContent = 'Light mode';
+  }
   renderFellows();
   loadTasks();
   renderCalendars();

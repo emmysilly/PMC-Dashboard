@@ -547,6 +547,19 @@
             <div class="task-check" onclick="toggleTask(this)"></div>
             <div class="task-text">Reply to Wajiha Mekki (PC) — confirm Saturday 12:30 PM EST meeting <span class="task-badge badge-urgent">today</span></div>
           </div>
+          <div class="task-item" style="flex-direction:column; align-items:flex-start;">
+            <div style="display:flex; align-items:flex-start; gap:0.75rem; width:100%;">
+              <div class="task-check" onclick="toggleTask(this)"></div>
+              <div class="task-text" style="flex:1;">Send AI policy reminder to LA team in Slack <span class="task-badge badge-urgent">today</span>
+                <span onclick="toggleMsg('ai-policy-msg')" style="cursor:pointer; font-size:0.75rem; color:var(--accent); margin-left:6px; font-weight:500;">▸ see message</span>
+              </div>
+            </div>
+            <div id="ai-policy-msg" style="display:none; margin-top:0.6rem; margin-left:2rem; background:var(--surface2); border-radius:8px; padding:0.85rem 1rem; font-size:0.82rem; color:var(--muted); line-height:1.7; width:calc(100% - 2rem); position:relative;">
+              Hey team! Quick heads up — just a reminder that per the Paragon code of conduct, AI tools should not be used for research or finding sources. Stick to traditional search like Google, Google Scholar, etc. for your synthesis grid and project work! Let me know if you have any questions 😊
+              <button onclick="copyMsg('ai-policy-msg-text')" style="position:absolute; top:0.6rem; right:0.6rem; font-family:'DM Sans',sans-serif; font-size:0.72rem; background:var(--accent); color:white; border:none; border-radius:6px; padding:3px 10px; cursor:pointer;">Copy</button>
+              <span id="ai-policy-msg-text" style="display:none;">Hey team! Quick heads up — just a reminder that per the Paragon code of conduct, AI tools should not be used for research or finding sources. Stick to traditional search like Google, Google Scholar, etc. for your synthesis grid and project work! Let me know if you have any questions 😊</span>
+            </div>
+          </div>
           <div class="task-item">
             <div class="task-check" onclick="toggleTask(this)"></div>
             <div class="task-text">Schedule intro call with Wajiha Mekki (PC) <span class="task-badge badge-urgent">this week</span></div>
@@ -838,11 +851,41 @@
         <strong style="color:var(--text);">Fellows flagged:</strong> Lincoln Reyes — quiet after Day 1 intro, not engaging in docs or planning. Terry Wu — organized Zoom invite but minimal vocal presence. Both marked to watch at Saturday meeting.
       </div>
       <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Attendance note (Jun 6 team meeting):</strong> Ashlyn Roice did not attend. Likely had a prior commitment — not flagged yet since she has been communicative. Worth sending a friendly DM to check in and keep the relationship warm. Not her responsibility to inform PMC but good to note.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Fellow background note:</strong> Lily Hu has prior experience working with the LA City Council — strong asset for the LA Language Access project. Worth noting for project context.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
         <strong style="color:var(--text);">PC contact:</strong> Wajiha Mekki (PC) messaged Emmy on June 5 — invited her to join the Saturday 12:30 PM EST meeting with Jessica Zhang and requested an intro call. Emmy needs to respond ASAP.
       </div>
       <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
         <strong style="color:var(--text);">Airtable status logged:</strong> All 8 fellows logged for Week 1. 7 marked Active, 1 (Lincoln) marked Partial with Low engagement.
       </div>
+
+      <div style="border-top:1px solid var(--border); margin:1rem 0;"></div>
+      <div style="font-weight:500; font-size:0.88rem; margin-bottom:0.6rem; color:var(--text);">📋 Meeting recap — Emmy + Wajiha (PC) + Jessica Zhang · Jun 6, 12:30 PM EST</div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Government partner outreach:</strong> Jessica is setting up a meeting with government partners. Wajiha sent her a template to reach out. First meeting will be a 1-on-1 with the GP, then eventually a full team meeting.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Guidance given to Jessica:</strong>
+        <ul style="margin-top:0.4rem; padding-left:1.2rem; line-height:2;">
+          <li>Create an agenda before the first meeting and send it to the government partners to keep them in the loop</li>
+          <li>Include any questions or deliverables you want them to review ahead of the meeting</li>
+          <li>Send a recap after the first meeting summarizing what was discussed</li>
+          <li>First meeting goal: introduce yourselves, set expectations, share the agenda, goals, and project statement</li>
+          <li>Schedule a second follow-up meeting after the first one</li>
+          <li>Fellows have already created questions to bring to the GP meeting</li>
+        </ul>
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Project statement:</strong> Jessica confirmed the team is working on the project statement today (Jun 6) and is also drafting the government partner outreach email.
+      </div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem; line-height:1.6;">
+        <strong style="color:var(--text);">Action items to monitor:</strong> Project statement due Tue Jun 9 · Government contact email due Mon Jun 8 · Watch that Jessica sends the GP email with agenda attached.
+      </div>
+
       <textarea class="notes-area" id="note-week1" placeholder="Add anything else from this week..."></textarea>
     </div>
 
@@ -965,7 +1008,7 @@ const fellows = [
     engagement: "High",
     week1: "Active!",
     vibe: "Organized, responsible. Communicated proactively about finals delay — shows maturity. Jumping into deliverables without needing prompting.",
-    pmc_note: "Good communicator. Will likely be reliable throughout cohort. Keep rapport warm."
+    pmc_note: "Good communicator. Will likely be reliable throughout cohort. Keep rapport warm. NOTE: Did not attend June 6 team meeting — likely busy with finals/other commitment. Not flagged yet but worth a friendly check-in DM."
   },
   {
     name: "Jessica Zhang",
@@ -1024,8 +1067,8 @@ const fellows = [
     status: "Active",
     engagement: "High",
     week1: "Active!",
-    vibe: "Responsive and collaborative. Created a shared working Google Doc early. Eager to connect in person with teammates.",
-    pmc_note: "Moving to NY mid-June — check if timezone or travel affects participation. Otherwise very engaged."
+    vibe: "Responsive and collaborative. Created a shared working Google Doc early. Eager to connect in person with teammates. Has prior experience working with the LA City Council — strong relevant background for this project.",
+    pmc_note: "Moving to NY mid-June — check if timezone or travel affects participation. LA City Council experience is a real asset for the language access project. Otherwise very engaged."
   },
   {
     name: "Lincoln Reyes",
@@ -1262,6 +1305,25 @@ function renderCalendars() {
   document.getElementById('team-cal').innerHTML = teamEvents.map(e =>
     calItem(e.date, e.title, e.sub, e.color, e.past)
   ).join('');
+}
+
+function toggleMsg(id) {
+  const el = document.getElementById(id);
+  const toggle = el.previousElementSibling.querySelector('span[onclick]');
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    if (toggle) toggle.textContent = '▾ hide message';
+  } else {
+    el.style.display = 'none';
+    if (toggle) toggle.textContent = '▸ see message';
+  }
+}
+
+function copyMsg(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    alert('Copied to clipboard!');
+  });
 }
 
 function saveAllNotes() {
